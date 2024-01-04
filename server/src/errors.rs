@@ -42,3 +42,12 @@ impl fmt::Display for CustomError {
         }
     }
 }
+
+impl From<sqlx::Error> for CustomError {
+    fn from(e: sqlx::Error) -> Self {
+        match e {
+            sqlx::Error::RowNotFound => Self::NotFound("找不到对应数据".into()),
+            _ => Self::InternalServerError("服务器发生内部错误，请联系网站管理员".into()),
+        }
+    }
+}
