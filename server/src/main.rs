@@ -2,11 +2,10 @@ mod errors;
 mod article;
 mod modles;
 
-use crate::errors::CustomError;
-use ntex::web::{self, middleware, App, HttpServer};
+use article::{edit, new ,view};
+use ntex::web::{middleware, App, HttpServer};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use std::{env, sync::{Arc, Mutex}};
-use article::view;
+use std::{env, sync::Arc};
 
 #[derive(Debug, Clone)]
 pub struct AppState{
@@ -24,19 +23,21 @@ async fn main() {
     let db_url = env::var("DATABASE_URL").expect("Please set `DATABASE_URL`");
 
     // State
-    let app_state = Arc::new(Mutex::new(AppState{
+    let app_state = Arc::new(AppState{
         db_pool: PgPoolOptions::new()
             .max_connections(10)
             .connect(&db_url)
             .await
             .unwrap(),
-    }));
+    });
 
     HttpServer::new( move || {
         App::new()
             .state(Arc::clone(&app_state))
             .wrap(middleware::Logger::default())
-            .service(view::get_articles)
+            .service(view::get_all_articles)
+            .service(new::new_article)
+            .service(edit::edit_article)
     })
     .bind("0.0.0.0:12345")
     .unwrap()
