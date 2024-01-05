@@ -13,6 +13,7 @@ pub enum CustomError {
     NotFound(String),
     BadRequest(String),
     InternalServerError(String),
+    AuthFailed(String),
 }
 
 impl WebResponseError for CustomError {
@@ -20,6 +21,7 @@ impl WebResponseError for CustomError {
         match self {
             Self::NotFound(_) => StatusCode::NOT_FOUND,
             Self::BadRequest(_) => StatusCode::BAD_REQUEST,
+            Self::AuthFailed(_) => StatusCode::UNAUTHORIZED,
             Self::InternalServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
@@ -29,6 +31,7 @@ impl WebResponseError for CustomError {
         HttpResponse::new(self.status_code()).set_body(
             match self { // 其实就是解构出来
                 Self::NotFound(e) => e,
+                Self::AuthFailed(e) => e,
                 Self::BadRequest(e) => e,
                 Self::InternalServerError(e) => e,
             }
@@ -42,6 +45,7 @@ impl fmt::Display for CustomError {
         match self {
             CustomError::NotFound(e) => write!(f, "{e}"),
             Self::BadRequest(e) => write!(f, "{e}"),
+            Self::AuthFailed(e) => write!(f, "{e}"),
             CustomError::InternalServerError(e) => write!(f, "{e}"),
         }
     }

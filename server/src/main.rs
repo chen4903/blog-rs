@@ -1,11 +1,13 @@
 mod errors;
 mod article;
 mod modles;
+mod user;
 
 use article::{edit, new ,view, delete, search};
 use ntex::web::{middleware, App, HttpServer, self};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use std::{env, sync::Arc};
+use user::login;
 
 #[derive(Debug, Clone)]
 pub struct AppState{
@@ -61,6 +63,6 @@ fn route(cfg: &mut web::ServiceConfig){
             .route("/search/{keyword}", web::get().to(
                 search::search_article)),
         )
-        .service(web::scope("/articles").route("", web::get().to(view::get_articles_preview))
-    );
+        .service(web::scope("/articles").route("", web::get().to(view::get_articles_preview)))
+        .service(web::scope("/user").route("login", web::post().to(login::github_login)));
 } 
