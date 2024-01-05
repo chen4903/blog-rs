@@ -8,3 +8,11 @@ pub struct Article {
     pub content: String,
     pub date: Option<chrono::NaiveDate>,
 }
+
+/// 文章预览
+#[derive(Debug, Clone, Serialize)]
+pub struct ArticlePreview {
+    pub id: u32,
+    pub title: String,
+    pub date: chrono::NaiveDate,
+}

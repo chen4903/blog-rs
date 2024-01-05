@@ -1,12 +1,10 @@
 use std::sync::Arc;
 use ntex::web::{
-    self,
     types::{Json, State},
     HttpResponse, Responder,
 };
 use crate::{errors::CustomError, modles::article::Article, AppState};
 
-#[web::post("/article")]
 pub async fn new_article(
     article: Json<Article>,
     state: State<Arc<AppState>>,

@@ -1,13 +1,7 @@
 use std::sync::Arc;
-use ntex::web::{
-    self,
-    types::{Json, State},
-    HttpResponse, Responder,
-};
+use ntex::web::types::{Json, State};
 use crate::{errors::CustomError, modles::article::Article, AppState};
 
-
-#[web::put("/article")]
 pub async fn edit_article(
     article: Json<Article>,
     state: State<Arc<AppState>>
