@@ -7,3 +7,7 @@ edition = "2021"
 
 [dependencies]
 yew = { version = "0.20.0", features = ["csr"]}
+# 将rust和js的浏览器abi进行了一些绑定，从而使我们可以在rust中调用js的abi。
+# Windows是指浏览器的Window对象，而不是平常说的Windows，mac，Linux操作系统
+web-sys = {version = "0.3.60", features=["Window","Document"]}
+yew-router = "0.17.0"
