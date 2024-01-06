@@ -1,6 +1,7 @@
-use crate::components::{container::Container, home::Home, not_found::NotFound};
+use crate::components::{container::Container, home::Home, not_found::NotFound, article::article_viewer::ArticleViewer};
 use yew::prelude::*;
 use yew_router::prelude::*;
+
 
 // app 函数是一个Yew组件，使用了 #[function_component] 属性宏。该组件是整个应用的入口点。
 #[function_component(App)]
@@ -20,9 +21,11 @@ pub fn app() -> Html {
 pub enum Route {
     #[at("/")]
     Home,
+    #[at("/article/:article_id")]
+    ArticleViewer{article_id: u32},
     #[not_found]
     #[at("/404")]
-    NotFound
+    NotFound,
 }
 
 // 路由切换函数
@@ -32,6 +35,9 @@ fn switch(route: Route) -> Html { // switch 函数接收一个 Route 枚举作�
         {
             match route { // 使用 match 表达式根据路由选择要渲染的组件，分别是 Home 或 NotFound。
                 Route::Home => html! { <Home/> },
+                Route::ArticleViewer{article_id} => html! {
+                    <ArticleViewer{article_id}/>
+                },
                 Route::NotFound => html!{ <NotFound/> }
             }
         }

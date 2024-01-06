@@ -15,3 +15,4 @@ gloo = "=0.8.0" # 0.8.1及其以上版本，没有了Request::new
 serde = {version = "1.0.152", features = ["derive"]}
 serde_json = "1.0.91"
 wasm-bindgen-futures = "0.4.34"
+pulldown-cmark = "=0.9.2"

@@ -1,12 +1,16 @@
-use gloo::{console::log, net::http::Method};
+use gloo::net::http::Method;
 use yew::prelude::*;
-use crate::{fetch::fetch, models::article::ArticlePreview as Preview};
+use yew_router::prelude::*;
+use crate::{app::Route, fetch::fetch, models::article::ArticlePreview as Preview};
 
 #[function_component(ArticlePreview)]
 pub fn article_preview() -> Html {
     // 表示数据正在加载中，在页面上显示Loading字样
     let loading = use_state(|| true);
     let articles = use_state(|| Err("".into()));
+
+    // 用于跳转到其他路由（其他组件）, 这是一个钩子Hook
+    let navigator = use_navigator().unwrap();
 
     {
         let loading = loading.clone();
@@ -31,21 +35,30 @@ pub fn article_preview() -> Html {
         if *loading{
             <p>{"Loading..."}</p>
         } else {
-            { content((*articles).clone())}
+            { content(navigator, (*articles).clone())}
         }
     }
 }
 
 /// 生成HTML
-fn content(articles: Result<Vec<Preview>, String>) -> Html {
-    let jump = |_id| Callback::from(|_| log!("Clicked"));
+fn content(
+    navigator: Navigator, 
+    articles: Result<Vec<Preview>, String>
+) -> Html {
+    let jump = |navigator: Navigator, article_id: u32| {
+        Callback::from(move |_| {
+            // 查看对应的文章
+            navigator.push(&Route::ArticleViewer{ article_id})
+        })
+    };
 
     match articles {
         Ok(articles) => articles
             .iter()
             .map(|i| {
                 html! {
-                    <article class="card" onclick={jump(i.id)} key={"i.id"}>
+                    // 因为jump会把navigator移动(move),这样就无法在迭代器中使用了(因为在上一次迭代中这个变量已经被move了，所以在接下来的迭代中就无法继续使用了)，所以要clone一下
+                    <article class="card" onclick={jump(navigator.clone(), i.id)} key={"i.id"}>
                         <header>
                             <h3>{&i.title}</h3>
                             <span style="color: grey">{ &i.date}</span>
