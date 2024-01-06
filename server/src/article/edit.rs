@@ -1,8 +1,11 @@
 use std::sync::Arc;
 use ntex::web::types::{Json, State};
-use crate::{errors::CustomError, modles::article::Article, AppState};
+use crate::{errors::CustomError, modles::{article::Article, user::Admin}, AppState};
 
+/// 修改文章
+/// 需要管理员权限 
 pub async fn edit_article(
+    _: Admin,
     article: Json<Article>,
     state: State<Arc<AppState>>
 ) -> Result<String, CustomError> {

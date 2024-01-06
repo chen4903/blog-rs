@@ -3,9 +3,12 @@ use ntex::web::{
     types::{Json, State},
     HttpResponse, Responder,
 };
-use crate::{errors::CustomError, modles::article::Article, AppState};
+use crate::{errors::CustomError, modles::{article::Article, user::Admin}, AppState};
 
+/// 新增文章
+/// 需要管理员权限
 pub async fn new_article(
+    _: Admin,
     article: Json<Article>,
     state: State<Arc<AppState>>,
 ) -> Result<impl Responder, CustomError> {

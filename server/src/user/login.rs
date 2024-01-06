@@ -15,7 +15,7 @@ use crate::{
 };
 
 const CLIENT_ID: &str = "b12f78cc1f56e49b9f3e";
-const CLIENT_SECRET: &str = "输入你的SECRET";
+const CLIENT_SECRET: &str = "a1d15f98d4dccc49102d762ef62cd5de2c06d580";
 
 /// 接收传过来的code，获取access_token，得到用户的数据并存进数据库
 pub async fn github_login(
