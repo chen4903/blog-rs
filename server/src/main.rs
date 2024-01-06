@@ -70,7 +70,8 @@ fn route(cfg: &mut web::ServiceConfig){
             .route("/login", web::post().to(user::login::github_login))
         )
         .service(web::scope("/comment")
-            .route("/{id}", web::get().to(comment::view::get_comments_for_article))
+            .route("/{article_id}", web::get().to(comment::view::get_comments_for_article))
             .route("", web::post().to(comment::new::new_comment))
+            .route("/{comment_id}", web::delete().to(comment::delete::delete_comment))
         );
 } 

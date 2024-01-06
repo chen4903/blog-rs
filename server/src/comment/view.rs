@@ -12,15 +12,15 @@ pub async fn get_comments_for_article(
     let db_pool = &state.db_pool;
     let article_id = article_id.0;
 
-    // 查找对应问责的所有评论，拿到他们的user_id, content, date和users表里相同user_id(对应的是users表里的id)的记录的name, avatar_url
+    // 查找对应文章的所有评论，拿到他们的user_id, content, date和users表里相同user_id(对应的是users表里的id)的记录的name, avatar_url
     let comments = sqlx::query!(
-        "SELECT comments.user_id, comments.content, comments.date, users.name, users.avatar_url FROM comments JOIN users ON comments.user_id = users.id WHERE comments.article = $1", article_id as i32
+        "SELECT comments.id, comments.user_id, comments.content, comments.date, users.name, users.avatar_url FROM comments JOIN users ON comments.user_id = users.id WHERE comments.article = $1", article_id as i32
     )
     .fetch_all(db_pool)
     .await?
     .iter()
     .map(|i| Comment {
-        id: None,
+        id: Some(i.id as u32),
         user: Some(GithubUserInfo {
             id: i.user_id,
             login: i.name.clone(),
