@@ -34,13 +34,13 @@ pub struct GithubUserInfo {
 /// 网站的所有用户（包括管理员）（用于身份验证）
 #[derive(Debug, Clone)]
 pub struct User{
-    pub access_token: String
+    pub id: i32
 }
 
 /// 网站的管理员（用于身份验证）
 #[derive(Debug, Clone)]
 pub struct Admin{
-    pub access_token: String
+    pub id: i32
 }
 
 // 实现FromRequest trait
@@ -89,7 +89,7 @@ impl<E: ErrorRenderer> FromRequest<E> for User {
             }
 
             Ok(Self {
-                access_token: access_token.value().to_string(),
+                id: user_id
             })
         };
 
@@ -146,7 +146,7 @@ impl<E: ErrorRenderer> FromRequest<E> for Admin {
             }
 
             Ok(Self {
-                access_token: access_token.value().to_string(),
+                id: user_id
             })
         };
         Box::pin(fut)

@@ -1,13 +1,12 @@
 mod errors;
 mod article;
-mod modles;
+mod models;
 mod user;
+mod comment;
 
-use article::{edit, new ,view, delete, search};
 use ntex::web::{middleware, App, HttpServer, self};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use std::{env, sync::Arc};
-use user::login;
 
 #[derive(Debug, Clone)]
 pub struct AppState{
@@ -47,22 +46,31 @@ async fn main() {
 }
 
 fn route(cfg: &mut web::ServiceConfig){
-    cfg.service(
+    cfg
+        .service(
             web::scope("/article")
             .route("{id}", web::get().to(
-                view::get_article))
+                article::view::get_article))
             .route("", web::post().to(
-                new::new_article
+                article::new::new_article
             ))
             .route("", web::put().to(
-                edit::edit_article
+                article::edit::edit_article
             ))
             .route("{id}", web::delete().to(
-                delete::delete_article
+                article::delete::delete_article
             ))
             .route("/search/{keyword}", web::get().to(
-                search::search_article)),
+                article::search::search_article)),
         )
-        .service(web::scope("/articles").route("", web::get().to(view::get_articles_preview)))
-        .service(web::scope("/user").route("login", web::post().to(login::github_login)));
+        .service(web::scope("/articles")
+            .route("", web::get().to(article::view::get_articles_preview))
+        )
+        .service(web::scope("/user")
+            .route("/login", web::post().to(user::login::github_login))
+        )
+        .service(web::scope("/comment")
+            .route("/{id}", web::get().to(comment::view::get_comments_for_article))
+            .route("", web::post().to(comment::new::new_comment))
+        );
 } 

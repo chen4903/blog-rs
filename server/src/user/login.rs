@@ -10,7 +10,7 @@ use reqwest::Client;
 use std::sync::Arc;
 use crate::{
     errors::CustomError,
-    modles::user::{AccessToken, GithubUserInfo, Login},
+    models::user::{AccessToken, GithubUserInfo, Login},
     AppState
 };
 

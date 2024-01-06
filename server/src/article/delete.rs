@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use ntex::web::types::{Path, State};
-use crate::{errors::CustomError, modles::user::Admin, AppState};
+use crate::{errors::CustomError, models::user::Admin, AppState};
 
 /// 删除文章
 /// 需要管理员权限

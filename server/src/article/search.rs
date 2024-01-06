@@ -1,6 +1,6 @@
 use ntex::web::types::{Json, Path, State};
 use std::sync::Arc;
-use crate::{errors::CustomError, modles::article::ArticlePreview, AppState};
+use crate::{errors::CustomError, models::article::ArticlePreview, AppState};
 
 /// 搜索文章
 pub async fn search_article(

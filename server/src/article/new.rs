@@ -3,7 +3,7 @@ use ntex::web::{
     types::{Json, State},
     HttpResponse, Responder,
 };
-use crate::{errors::CustomError, modles::{article::Article, user::Admin}, AppState};
+use crate::{errors::CustomError, models::{article::Article, user::Admin}, AppState};
 
 /// 新增文章
 /// 需要管理员权限
