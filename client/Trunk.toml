@@ -1,0 +1,23 @@
+# trunkrs.dev网址可以查看具体的配置事项
+
+[[proxy]]
+# 前端网页中，比如/api/xxx, /api/yyy/zzz的所有内容，都会被重定向到backend中
+rewrite = "/api/"
+backend = "http://localhost:12345/"
+
+
+
+
+
+# Trunk 是一个用于构建和运行 WebAssembly（Wasm）项目的工具，而 Trunk.toml 是 Trunk 项目的配置文件。在你提供的配置文件中，有一个 [[proxy]] 部分，用于配置代理规则。
+
+# [[proxy]] 表示这是一个代理规则的定义，可以有多个 [[proxy]] 条目，每个条目表示一个代理规则。
+
+# rewrite = "/api/" 指定了一个路径重写规则，表示所有前端网页中的路径以 "/api/" 开头的请求都会被重定向。
+
+# backend = "http://localhost:12345/" 指定了重定向的目标后端地址。所有匹配到重写规则的请求都会被代理到这个后端地址，实际上将这些请求从前端发送到后端。
+
+# 具体来说，假设你的前端应用有请求 "/api/xxx" 或 "/api/yyy/zzz"，这两个路径都匹配到了 rewrite = "/api/" 规则。这些请求将被重写为 "/xxx" 或 "/yyy/zzz"，然后被代理到指定的后端地址 "http://localhost:12345/"。
+# 比如前端请求为/api/articles，那么就会被重定向到http://localhost:12345/articles
+
+# 这种代理配置通常用于解决跨域请求的问题，或者在开发环境中将前端请求代理到后端服务，以避免跨域限制。在生产环境中，可能会使用反向代理来处理这类请求。

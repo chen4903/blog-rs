@@ -11,3 +11,7 @@ yew = { version = "0.20.0", features = ["csr"]}
 # Windows是指浏览器的Window对象，而不是平常说的Windows，mac，Linux操作系统
 web-sys = {version = "0.3.60", features=["Window","Document"]}
 yew-router = "0.17.0"
+gloo = "=0.8.0" # 0.8.1及其以上版本，没有了Request::new
+serde = {version = "1.0.152", features = ["derive"]}
+serde_json = "1.0.91"
+wasm-bindgen-futures = "0.4.34"
