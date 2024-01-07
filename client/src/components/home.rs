@@ -1,13 +1,14 @@
 use yew::prelude::*;
-use crate::components::{article::article_preview::ArticlePreview, card::Card};
+use crate::components::{article::article_preview::ArticlePreview, card::Card, container::AppContext};
 
 #[function_component(Home)]
 pub fn home() -> Html {
     // 通过Callback更改网页标题
     // use_context 是 Yew 框架提供的一个钩子（hook），用于获取上下文中的数据。
     // 在这里，使用 use_context::<Callback<String>>() 获取了一个 Callback<String> 类型的上下文。
-    use_context::<Callback<String>>()
+    use_context::<AppContext>()
         .unwrap()
+        .set_title // 闭包
         // 通过 unwrap() 获取 Callback 中的值，然后使用 .emit("Home".into()) 调用回调函数，向回调函数传递一个标题为 "Home" 的字符串。
         .emit("Home".into());
 

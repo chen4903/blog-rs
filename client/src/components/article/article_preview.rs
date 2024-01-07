@@ -19,8 +19,12 @@ pub fn article_preview() -> Html {
             move |_| { // 这里move进去了，但是我们后面还要用loading, articles，因此我们加上{}作用域，后面还可以再用loading, articles
                 wasm_bindgen_futures::spawn_local(async move {
                     articles.set(
-                        fetch::<Vec<Preview>>("/api/articles".into(),
-                        Method::GET, None).await,
+                        fetch::<Vec<Preview>>(
+                            "/api/articles".into(),
+                            Method::GET,
+                            None,
+                            None
+                        ).await,
                     );
                     loading.set(false); // 成功获取数据之后，Loading设置为false
                 });

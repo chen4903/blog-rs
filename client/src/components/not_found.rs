@@ -1,11 +1,12 @@
 use yew::prelude::*;
-use crate::components::card::Card;
+use crate::components::{card::Card, container::AppContext};
 
 #[function_component(NotFound)]
 pub fn not_found() -> Html {
     // 通过Callback更改网页标题
-    use_context::<Callback<String>>()
+    use_context::<AppContext>()
         .unwrap()
+        .set_title
         .emit("找不到网页".into());
 
     html! {

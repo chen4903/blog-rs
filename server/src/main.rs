@@ -68,6 +68,7 @@ fn route(cfg: &mut web::ServiceConfig){
         )
         .service(web::scope("/user")
             .route("/login", web::post().to(user::login::github_login))
+            .route("/info", web::get().to(user::info::get_user_info))
         )
         .service(web::scope("/comment")
             .route("/{article_id}", web::get().to(comment::view::get_comments_for_article))
