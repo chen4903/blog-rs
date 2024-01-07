@@ -1,28 +1,95 @@
 use yew::prelude::*;
-use crate::components::{article::article_preview::ArticlePreview, card::Card, container::AppContext};
+use gloo::net::http::Method;
+use wasm_bindgen::JsCast;
+use web_sys::HtmlInputElement;
+use yew_router::prelude::*;
+use crate::{
+    app::Route,
+    components::{article::article_preview::ArticlePreview, card::Card, container::AppContext},
+    fetch,
+    models::article::ArticlePreview as Preview
+};
 
 #[function_component(Home)]
 pub fn home() -> Html {
     // 通过Callback更改网页标题
-    // use_context 是 Yew 框架提供的一个钩子（hook），用于获取上下文中的数据。
-    // 在这里，使用 use_context::<Callback<String>>() 获取了一个 Callback<String> 类型的上下文。
-    use_context::<AppContext>()
-        .unwrap()
-        .set_title // 闭包
-        // 通过 unwrap() 获取 Callback 中的值，然后使用 .emit("Home".into()) 调用回调函数，向回调函数传递一个标题为 "Home" 的字符串。
-        .emit("Home".into());
+    let context = use_context::<AppContext>().unwrap();
 
-/* 
-    为什么可以修改到网页标题？
-    Callback<String> 中的回调函数被提供给了上下文，并且通过 use_context 获取到了这个回调函数。
-    在 Yew 框架中，通过调用回调函数，可以触发特定的行为。在这里，回调函数的目的是修改网页标题。
-    在回调函数内部，使用了 web_sys::window().unwrap().document().unwrap().set_title 来获取浏览器窗口对象，然后设置文档的标题，从而修改了网页标题。
-    总体而言，这段代码中的回调函数充当了修改网页标题的途径，而通过上下文机制，可以在组件中获取这个回调函数并在需要时调用它
-*/
+    let user = (*context.user).clone();
+
+    context.set_title.emit("Home".into());
+
+    let search_keyword = use_state(|| None);
+
+    let loading = use_state(|| true);
+    let articles = use_state(|| Err("".into()));
+
+    // 搜索文章
+    let search_article = {
+        let search_keyword = search_keyword.clone();
+
+        Callback::from(move |event: InputEvent| {
+            // 获得输入框的值
+            let keyword = event
+                .target()
+                .unwrap()
+                .unchecked_into::<HtmlInputElement>()
+                .value()
+                .trim()
+                .to_owned();
+
+            // 用户没有输入任何东西
+            if keyword.is_empty() {
+                // 展示所有文章
+                search_keyword.set(None)
+            } else {
+                // 搜索
+                search_keyword.set(Some(keyword))
+            }
+        })
+    };
+
+    {
+        let search_keyword_cloned = search_keyword.clone();
+
+        let loading = loading.clone();
+        let articles = articles.clone();
+
+        // 在 search_keyword_cloned 发生变化的时候重新获取数据
+        use_effect_with_deps(
+            move |_| {
+                wasm_bindgen_futures::spawn_local(async move {
+                    let url = if let Some(keyword) = (*search_keyword).clone() {
+                        format!("/api/article/search/{keyword}")
+                    } else {
+                        "/api/articles".into()
+                    };
+
+                    articles.set(fetch::fetch::<Vec<Preview>>(url, Method::GET, None, None).await);
+
+                    loading.set(false);
+                })
+            }, 
+            search_keyword_cloned
+        );
+    }
+
+    let navigator = use_navigator().unwrap();
 
     html! {
         <Card title={"文章"}>
-            <ArticlePreview/>
+            if let Ok(user) = user {
+                if user.is_admin {
+                    <button style="margin-bottom: 1%;" onclick={Callback::from(move |_| navigator.push(&Route::NewArticle))}>{"新增文章"}
+                    </button>
+                }
+            }
+            <input type="text" placeholder="搜索文章" oninput={search_article} style="margin-bottom: 1%;" />
+            if * loading {
+                <p> {"Loading..."}</p>
+            } else {
+                <ArticlePreview articles={(*articles).clone()} />
+            }
         </Card>
     }
 }

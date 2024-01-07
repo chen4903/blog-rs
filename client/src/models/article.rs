@@ -10,7 +10,7 @@ pub struct Article {
 }
 
 /// 文章预览
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Deserialize, PartialEq)]
 pub struct ArticlePreview {
     pub id: u32,
     pub title: String,

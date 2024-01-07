@@ -11,12 +11,19 @@ pub async fn delete_article(
 ) -> Result<String, CustomError> {
     let db_pool = &state.db_pool;
 
-    sqlx::query!(
+    let rows_effected = sqlx::query!(
         "DELETE FROM articles WHERE id = $1",
         id.0 as i32
     )
     .execute(db_pool)
-    .await?;
+    .await?
+    .rows_affected();
 
-    Ok("删除文章成功".into())
+    if rows_effected == 0 {
+        Err(CustomError::NotFound(
+            "删除文章失败, 可能是提供的文章ID不对或者你没有权限删除文章".into()
+        ))
+    } else {
+        Ok("删除文章成功!".into())
+    }
 }
