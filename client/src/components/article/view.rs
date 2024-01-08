@@ -1,7 +1,7 @@
 use gloo::net::http::Method;
 use yew::prelude::*;
 use crate::{
-    components::{card::Card, container::AppContext},
+    components::{card::Card, comment::view::Comments,container::AppContext},
     models::article::Article,
     fetch,
     utils,
@@ -55,20 +55,32 @@ pub fn article_viewer(props: &Props) -> Html {
         .set_title
         .emit(title.clone());
 
-    html! {
-        if *loading {
-            <Card title={"Loading..."}>
-                <p>{"马上就好......"}</p>
-            </Card>
-        } else {
-            <Card {title}> // yew提供的语法糖，相当于<Card title="title">
-                {
-                    match &*article {
-                        Ok(article) => utils::convert_markdown_to_html(article.content.clone()),
-                        Err(e) => html! {<p>{e} </p>}
-                    }
+        html! {
+            <>
+                if *loading {
+                    <Card title={"Loading..."}>
+                        <p>{ "马上就好......" }</p>
+                    </Card>
+                } else {
+                    <Card {title}>
+                        {
+                            match &*article {
+                                Ok(article) => {
+                                    html! {
+                                        <>
+                                            { utils::convert_markdown_to_html(article.content.clone()) }
+    
+                                        </>
+                                    }
+    
+                                },
+                                Err(e) => html! { <p>{ e }</p> }
+                            }
+                        }
+                    </Card>
+                    <Comments {article_id}/>
                 }
-            </Card>
+    
+            </>
         }
-    }
 }

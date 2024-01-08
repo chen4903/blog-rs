@@ -5,7 +5,7 @@ use web_sys::HtmlInputElement;
 use yew_router::prelude::*;
 use crate::{
     app::Route,
-    components::{article::article_preview::ArticlePreview, card::Card, container::AppContext},
+    components::{article::preview::ArticlePreview, card::Card, container::AppContext},
     fetch,
     models::article::ArticlePreview as Preview
 };

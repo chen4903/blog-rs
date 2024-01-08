@@ -2,7 +2,7 @@ use crate::components::{
     container::Container,
     home::Home,
     not_found::NotFound,
-    article::{article_viewer::ArticleViewer, new::NewArticle, delete::DeleteArticle, edit::EditArticle},
+    article::{view::ArticleViewer, new::NewArticle, delete::DeleteArticle, edit::EditArticle},
     user::{login::Login, oauth::OAuth}
 };
 use yew::prelude::*;    

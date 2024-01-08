@@ -6,3 +6,4 @@ pub mod article;
 pub mod user;
 pub mod modal;
 pub mod markdown_editor;
+pub mod comment;

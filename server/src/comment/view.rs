@@ -2,7 +2,7 @@ use std::sync::Arc;
 use ntex::web::types::{Json, Path, State};
 use crate::{
     errors::CustomError,
-    models::{comment::Comment, user::GithubUserInfo}, AppState
+    models::{comment::Comment, user::UserInfo}, AppState
 };
 /// 通过文章ID获取该文章的所有评论（包含发表评论的用户的信息）
 pub async fn get_comments_for_article(
@@ -21,10 +21,11 @@ pub async fn get_comments_for_article(
     .iter()
     .map(|i| Comment {
         id: Some(i.id as u32),
-        user: Some(GithubUserInfo {
+        user: Some(UserInfo {
             id: i.user_id,
             login: i.name.clone(),
-            avatar_url: i.avatar_url.clone()
+            avatar_url: i.avatar_url.clone(),
+            is_admin: i.user_id == 108803001,
         }),
         content: i.content.clone(),
         date: Some(i.date.unwrap()),

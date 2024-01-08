@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// 用户信息
 /// 注意要实现PartialEq
-#[derive(Debug, Clone, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct User {
     /// Github用户ID
     pub id: i32,
