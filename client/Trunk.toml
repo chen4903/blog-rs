@@ -5,8 +5,11 @@
 rewrite = "/api/"
 backend = "http://localhost:12345/"
 
+[build]
+release = true
 
-
+[serve]
+no_autoreload = true
 
 
 # Trunk 是一个用于构建和运行 WebAssembly（Wasm）项目的工具，而 Trunk.toml 是 Trunk 项目的配置文件。在你提供的配置文件中，有一个 [[proxy]] 部分，用于配置代理规则。
