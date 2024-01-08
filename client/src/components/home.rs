@@ -55,10 +55,20 @@ pub fn home() -> Html {
         let loading = loading.clone();
         let articles = articles.clone();
 
+        // 如果用户在搜索，就应用防抖，否则不用
+        let millis = if(*search_keyword).clone().is_some() {
+            // 用户正在搜索
+            500
+        } else {
+            // 用户没有输入任何东西
+            1
+        };
+
         // 在 search_keyword_cloned 发生变化的时候重新获取数据
-        use_effect_with_deps(
-            move |_| {
+        yew_hooks::use_debounce_effect_with_deps(
+            move || {
                 wasm_bindgen_futures::spawn_local(async move {
+                    loading.set(true);
                     let url = if let Some(keyword) = (*search_keyword).clone() {
                         format!("/api/article/search/{keyword}")
                     } else {
@@ -68,9 +78,10 @@ pub fn home() -> Html {
                     articles.set(fetch::fetch::<Vec<Preview>>(url, Method::GET, None, None).await);
 
                     loading.set(false);
-                })
-            }, 
-            search_keyword_cloned
+                });
+            },
+            millis,
+            search_keyword_cloned,
         );
     }
 

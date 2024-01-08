@@ -11,11 +11,9 @@ use std::sync::Arc;
 use crate::{
     errors::CustomError,
     models::user::{AccessToken, GithubUserInfo, Login},
-    AppState
+    AppState, 
+    constants
 };
-
-const CLIENT_ID: &str = "b12f78cc1f56e49b9f3e";
-const CLIENT_SECRET: &str = "a1d15f98d4dccc49102d762ef62cd5de2c06d580";
 
 /// 接收传过来的code，获取access_token，得到用户的数据并存进数据库
 pub async fn github_login(
@@ -31,7 +29,9 @@ pub async fn github_login(
     // 把Access设置为json，让Github的API给我们返回JSON格式的数据
     let access_token = client
         .post(format!(
-            "https://github.com/login/oauth/access_token?client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&code={code}"
+            "https://github.com/login/oauth/access_token?client_id={}&client_secret={}&code={code}",
+            constants::CLIENT_ID,
+            constants::CLIENT_SECRET
         ))
         .header("Accept", "application/json")
         .send()

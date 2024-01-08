@@ -3,6 +3,7 @@ mod article;
 mod models;
 mod user;
 mod comment;
+mod constants;
 
 use ntex::web::{middleware, App, HttpServer, self};
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};

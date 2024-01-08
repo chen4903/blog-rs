@@ -6,15 +6,7 @@ use yew::prelude::*;
 pub fn convert_markdown_to_html(markdown: String) -> Html {
 
     // Set up options and parser
-    let mut options = Options::empty();
-
-    // Enable all the features, 增强兼容性
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    options.insert(Options::ENABLE_FOOTNOTES);
-    options.insert(Options::ENABLE_HEADING_ATTRIBUTES);
-    options.insert(Options::ENABLE_SMART_PUNCTUATION);
-    options.insert(Options::ENABLE_TABLES);
-    options.insert(Options::ENABLE_TASKLISTS);
+    let options = Options::all();
 
     let parser = Parser::new_ext(&markdown, options);
 
