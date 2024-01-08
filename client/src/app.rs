@@ -3,7 +3,8 @@ use crate::components::{
     home::Home,
     not_found::NotFound,
     article::{view::ArticleViewer, new::NewArticle, delete::DeleteArticle, edit::EditArticle},
-    user::{login::Login, oauth::OAuth}
+    user::{login::Login, oauth::OAuth},
+    comment::delete::DeleteComment
 };
 use yew::prelude::*;    
 use yew_router::prelude::*;
@@ -35,6 +36,8 @@ pub enum Route {
     EditArticle { article_id: u32},
     #[at("/article/delete/:article_id")]
     DeleteArticle { article_id: u32},
+    #[at("/comment/delete/:comment_id")]
+    DeleteComment{comment_id: u32},
     #[at("/user/login")]
     Login,
     #[at("/user/login/oauth")] // Github跳转回来的时候，会携带一些参数
@@ -57,6 +60,7 @@ fn switch(route: Route) -> Html { // switch 函数接收一个 Route 枚举作�
                 Route::NewArticle => html! { <NewArticle/> },
                 Route::EditArticle{ article_id} => html! {<EditArticle{article_id} />},
                 Route::DeleteArticle{ article_id} => html! {<DeleteArticle{article_id} />},
+                Route::DeleteComment{ comment_id} => html! {<DeleteComment{comment_id} />},
                 Route::Login => html! {<Login/>},
                 Route::OAuth => html! {<OAuth/>},
                 Route::NotFound => html!{ <NotFound/> }
